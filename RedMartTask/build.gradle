@@ -36,6 +36,7 @@ ext {
     javax_annotation = '1.0'
     glideVersion = '3.7.0'
     retroVersion = '2.3.0'
+
     guavaVersion = '18.0'
     junitVersion = '4.12'
     mockitoVersion = '1.10.19'

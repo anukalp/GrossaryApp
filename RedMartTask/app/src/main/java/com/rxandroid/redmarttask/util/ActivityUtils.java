@@ -40,7 +40,6 @@ public class ActivityUtils {
         checkNotNull(fragment);
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.add(frameId, fragment, tagName);
-        transaction.addToBackStack(tagName);
         transaction.commit();
     }
 
@@ -59,5 +58,9 @@ public class ActivityUtils {
             throw new NullPointerException(errorMessage);
         }
         return reference;
+    }
+
+    public static String roundOffDouble(Double promoPrice) {
+        return "$" + Math.round(promoPrice * 100.0) / 100.0;
     }
 }

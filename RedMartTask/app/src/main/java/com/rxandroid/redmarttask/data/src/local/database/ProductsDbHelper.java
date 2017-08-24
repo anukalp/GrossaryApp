@@ -1,4 +1,4 @@
-package com.rxandroid.redmarttask.data.src;
+package com.rxandroid.redmarttask.data.src.local.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  * Created by anukalp on 23/8/17.
  */
 
-class ProductsDbHelper extends SQLiteOpenHelper {
+public class ProductsDbHelper extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION = 1;
 
     public static final String DATABASE_NAME = "products.db";

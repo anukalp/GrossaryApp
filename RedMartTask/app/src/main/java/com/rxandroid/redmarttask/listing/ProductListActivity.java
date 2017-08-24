@@ -50,7 +50,7 @@ public class ProductListActivity extends AppCompatActivity implements GroceryIte
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener((view) ->
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Filters Support is yet to be implemented", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show()
         );
 
@@ -60,6 +60,18 @@ public class ProductListActivity extends AppCompatActivity implements GroceryIte
         if (findViewById(R.id.product_detail_container) != null) {
             isMultiPane = true;
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mPresenter.subscribe();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mPresenter.unSubscribe();
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
@@ -76,8 +88,8 @@ public class ProductListActivity extends AppCompatActivity implements GroceryIte
     private InfiniteScrollListener createInfiniteScrollListener(LinearLayoutManager layoutManager) {
         return new InfiniteScrollListener(AppConstants.MAX_ITEMS_PER_REQUEST, layoutManager) {
             @Override
-            public void onScrolledToEnd(final int startOffSet) {
-                mPresenter.loadMore(startOffSet);
+            public void onScrolledToEnd(final int pageNo) {
+                mPresenter.loadMore(pageNo);
             }
         };
     }

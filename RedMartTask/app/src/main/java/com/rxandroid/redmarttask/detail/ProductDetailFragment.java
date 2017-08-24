@@ -71,7 +71,7 @@ public class ProductDetailFragment extends Fragment implements ProductDetailCont
         super.onCreate(savedInstanceState);
         Activity activity = this.getActivity();
         appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
-        productId = savedInstanceState.getString(ProductDetailFragment.ARG_ITEM_ID);
+        productId = getArguments().getString(ProductDetailFragment.ARG_ITEM_ID);
     }
 
     @Override

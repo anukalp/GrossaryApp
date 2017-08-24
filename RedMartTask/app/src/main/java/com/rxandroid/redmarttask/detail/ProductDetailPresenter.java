@@ -24,7 +24,6 @@ import com.google.common.base.Strings;
 import com.rxandroid.redmarttask.application.RedMartApplication;
 import com.rxandroid.redmarttask.data.src.ProductDataSource;
 import com.rxandroid.redmarttask.data.ProductDetail;
-import com.rxandroid.redmarttask.util.ActivityUtils;
 import com.rxandroid.redmarttask.util.schedulers.BaseSchedulerProvider;
 
 import javax.inject.Inject;
@@ -51,7 +50,7 @@ public class ProductDetailPresenter implements ProductDetailContract.Presenter {
     private CompositeDisposable mSubscriptions;
 
     @Inject
-    @Named("RemoteProductDataSource")
+    @Named("ProductDataRepository")
     ProductDataSource mProductRepository;
 
     @Inject

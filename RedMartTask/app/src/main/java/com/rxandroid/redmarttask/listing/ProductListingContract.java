@@ -39,6 +39,6 @@ public interface ProductListingContract {
 
     interface Presenter extends BasePresenter {
 
-        void loadMore(int startOffSet);
+        void loadMore(int pageNp);
     }
 }

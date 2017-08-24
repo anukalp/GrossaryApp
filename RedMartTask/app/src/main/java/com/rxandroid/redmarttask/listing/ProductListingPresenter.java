@@ -22,7 +22,6 @@ import android.support.annotation.NonNull;
 import com.rxandroid.redmarttask.application.RedMartApplication;
 import com.rxandroid.redmarttask.data.ProductDetail;
 import com.rxandroid.redmarttask.data.src.ProductDataSource;
-import com.rxandroid.redmarttask.util.ActivityUtils;
 import com.rxandroid.redmarttask.util.schedulers.BaseSchedulerProvider;
 
 import java.util.List;
@@ -50,7 +49,7 @@ public class ProductListingPresenter implements ProductListingContract.Presenter
 
     @NonNull
     @Inject
-    @Named("RemoteProductDataSource")
+    @Named("ProductDataRepository")
     ProductDataSource mProductRepository;
 
     @NonNull
@@ -125,7 +124,7 @@ public class ProductListingPresenter implements ProductListingContract.Presenter
     }
 
     @Override
-    public void loadMore(int startOffSet) {
-        loadProducts(false, false, startOffSet);
+    public void loadMore(int pageNo) {
+        loadProducts(false, false, pageNo);
     }
 }

@@ -60,7 +60,7 @@ dependencies {
     //Retrofit
     compile "com.squareup.retrofit2:retrofit:$rootProject.retroVersion"
     compile "com.squareup.retrofit2:converter-gson:$rootProject.retroVersion"
-
+    compile "com.squareup.retrofit2:adapter-rxjava2:${rootProject.retroVersion}"
 
     // Rx Java
     compile "io.reactivex.rxjava2:rxandroid:$rootProject.rxandroidVersion"

@@ -35,7 +35,7 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener((view) ->
-                Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Sorry this is beta version checkout is still under development", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show());
 
         // Show the Up button in the action bar.

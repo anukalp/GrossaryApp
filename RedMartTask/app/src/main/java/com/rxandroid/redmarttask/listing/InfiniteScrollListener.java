@@ -51,8 +51,9 @@ public abstract class InfiniteScrollListener extends RecyclerView.OnScrollListen
         super.onScrolled(recyclerView, dx, dy);
         if (canLoadMoreItems()) {
             loading = true;
-            final int totalItemsCount = layoutManager.getItemCount();
-            onScrolledToEnd(totalItemsCount);
+            final int pageNo = layoutManager.getItemCount() / AppConstants.MAX_ITEMS_PER_REQUEST;
+            onScrolledToEnd(pageNo);
+            loading = false;
         }
     }
 

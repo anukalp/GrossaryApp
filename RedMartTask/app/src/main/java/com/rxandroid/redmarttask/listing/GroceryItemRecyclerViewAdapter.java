@@ -1,6 +1,7 @@
 package com.rxandroid.redmarttask.listing;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.rxandroid.redmarttask.R;
 import com.rxandroid.redmarttask.data.ProductDetail;
+import com.rxandroid.redmarttask.util.ActivityUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,9 +48,12 @@ public class GroceryItemRecyclerViewAdapter
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         ProductDetail productItem = mProducts.get(position);
-        holder.mIdView.setText(productItem.getName());
-        holder.mContentView.setText(productItem.getPrice());
-        Glide.with(holder.mContentView.getContext()).load(productItem.getImageUrl())
+        holder.mIdView.setText(productItem.getTitleForList());
+        holder.mWeight.setText(productItem.getmWeight());
+        holder.priceView.setText(ActivityUtils.roundOffDouble(productItem.getPrice().getPromoPrice()));
+        holder.discountTextView.setText(ActivityUtils.roundOffDouble(productItem.getPrice().getPrice()));
+
+        Glide.with(holder.mView.getContext()).load(productItem.getImageUrl())
                 .centerCrop()
                 .into(holder.imageView);
 
@@ -67,20 +72,25 @@ public class GroceryItemRecyclerViewAdapter
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView mIdView;
-        public final TextView mContentView;
         public final ImageView imageView;
+        private final TextView priceView;
+        private final TextView discountTextView;
+        private final TextView mWeight;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
             mIdView = (TextView) view.findViewById(R.id.id);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            mWeight = (TextView) view.findViewById(R.id.weight);
             imageView = (ImageView) view.findViewById(R.id.product_img);
+            priceView = (TextView) view.findViewById(R.id.price);
+            discountTextView = (TextView) view.findViewById(R.id.discountText);
+            discountTextView.setPaintFlags(discountTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" + mIdView.getText() + "'";
         }
     }
 }

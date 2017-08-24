@@ -18,7 +18,7 @@ public interface ProductDataSource {
 
     Observable<ProductDetail> getProduct(@NonNull String productId);
 
-    void saveProducts(@NonNull List<ProductDetail> productDetails);
+    void addProductsToCart(@NonNull String productId);
 
     void refreshProducts();
 }

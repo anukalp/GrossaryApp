@@ -1,4 +1,4 @@
-package com.rxandroid.redmarttask.data.src;
+package com.rxandroid.redmarttask.data.src.local.database;
 
 /**
  * Created by anukalp on 23/8/17.
@@ -23,6 +23,8 @@ public final class ProductsPersistenceContract {
         public static final String COLUMN_NAME_DESCRIPTION = "description";
         public static final String COLUMN_NAME_IMAGE = "image";
         public static final String COLUMN_NAME_PRICE = "price";
+        public static final String COLUMN_NAME_ADDED = "added";
         public static final String COLUMN_NAME_COMPLETED = "completed";
+        public static final String COLUMN_NAME_WEIGHT = "weight";
     }
 }
