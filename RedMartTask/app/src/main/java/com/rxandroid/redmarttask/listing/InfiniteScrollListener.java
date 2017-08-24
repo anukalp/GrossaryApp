@@ -24,6 +24,10 @@ public abstract class InfiniteScrollListener extends RecyclerView.OnScrollListen
         this(maxItemsPerRequest, layoutManager, 5);
     }
 
+    public void setLoading(boolean loading) {
+        this.loading = loading;
+    }
+
     /**
      * Initializes InfiniteScrollListener, which can be added
      * to RecyclerView with addOnScrollListener method
@@ -53,7 +57,6 @@ public abstract class InfiniteScrollListener extends RecyclerView.OnScrollListen
             loading = true;
             final int pageNo = layoutManager.getItemCount() / AppConstants.MAX_ITEMS_PER_REQUEST;
             onScrolledToEnd(pageNo);
-            loading = false;
         }
     }
 

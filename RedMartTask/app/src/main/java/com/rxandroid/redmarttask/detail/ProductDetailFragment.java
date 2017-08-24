@@ -9,8 +9,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.rxandroid.redmarttask.listing.ProductListActivity;
 import com.rxandroid.redmarttask.R;
 
@@ -28,6 +30,7 @@ public class ProductDetailFragment extends Fragment implements ProductDetailCont
      * represents.
      */
     public static final String ARG_ITEM_ID = "product-id";
+    public static final String ARG_ITEM_URL = "product-img";
 
     /**
      * The dummy content this fragment is presenting.
@@ -37,11 +40,13 @@ public class ProductDetailFragment extends Fragment implements ProductDetailCont
     private TextView productDescription;
     private Toolbar toolbar;
     private CollapsingToolbarLayout appBarLayout;
+    private String imageUrl;
 
 
-    public static ProductDetailFragment newInstance(String productId) {
+    public static ProductDetailFragment newInstance(String productId, String itemUrl) {
         Bundle arguments = new Bundle();
         arguments.putString(ProductDetailFragment.ARG_ITEM_ID, productId);
+        arguments.putString(ProductDetailFragment.ARG_ITEM_URL, itemUrl);
         ProductDetailFragment detailFragment = new ProductDetailFragment();
         detailFragment.setArguments(arguments);
         return detailFragment;
@@ -72,6 +77,7 @@ public class ProductDetailFragment extends Fragment implements ProductDetailCont
         Activity activity = this.getActivity();
         appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
         productId = getArguments().getString(ProductDetailFragment.ARG_ITEM_ID);
+        imageUrl = getArguments().getString(ProductDetailFragment.ARG_ITEM_URL);
     }
 
     @Override
@@ -115,5 +121,17 @@ public class ProductDetailFragment extends Fragment implements ProductDetailCont
     @Override
     public void showMissingProduct() {
 
+    }
+
+    @Override
+    public void setImage(String imgUrl) {
+        if(null == imageUrl) {
+            imageUrl = imgUrl;
+            Activity activity = this.getActivity();
+            ImageView imageView = (ImageView) activity.findViewById(R.id.product_img);
+            Glide.with(activity.getApplicationContext()).load(imageUrl)
+                    .centerCrop()
+                    .into(imageView);
+        }
     }
 }

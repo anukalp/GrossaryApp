@@ -36,6 +36,7 @@ public class ProductListActivity extends AppCompatActivity implements GroceryIte
     private boolean isMultiPane;
     private GroceryItemRecyclerViewAdapter groceryItemAdapter;
     private ProductListingContract.Presenter mPresenter;
+    private InfiniteScrollListener scrollListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +80,7 @@ public class ProductListActivity extends AppCompatActivity implements GroceryIte
         recyclerView.setAdapter(groceryItemAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        InfiniteScrollListener scrollListener = createInfiniteScrollListener(layoutManager);
+        scrollListener = createInfiniteScrollListener(layoutManager);
         // Adds the scroll listener to RecyclerView
         recyclerView.addOnScrollListener(scrollListener);
     }
@@ -96,15 +97,16 @@ public class ProductListActivity extends AppCompatActivity implements GroceryIte
 
 
     @Override
-    public void listItemClicked(Context context, String itemId) {
+    public void listItemClicked(Context context, String itemId, String itemUrl) {
         if (isMultiPane) {
-            ProductDetailFragment fragment = new ProductDetailFragment();
+            ProductDetailFragment fragment = ProductDetailFragment.newInstance(itemId, itemUrl);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.product_detail_container, fragment)
                     .commit();
         } else {
             Intent intent = new Intent(context, ProductDetailActivity.class);
             intent.putExtra(ProductDetailFragment.ARG_ITEM_ID, itemId);
+            intent.putExtra(ProductDetailFragment.ARG_ITEM_URL, itemUrl);
             context.startActivity(intent);
         }
     }
@@ -124,6 +126,7 @@ public class ProductListActivity extends AppCompatActivity implements GroceryIte
         int startCount = groceryItemAdapter.getItemCount();
         groceryItemAdapter.addProducts(productDetailList);
         groceryItemAdapter.notifyItemRangeChanged(startCount, productDetailList.size());
+        scrollListener.setLoading(false);
     }
 
     @Override

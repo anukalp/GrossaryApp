@@ -57,7 +57,7 @@ public class GroceryItemRecyclerViewAdapter
                 .centerCrop()
                 .into(holder.imageView);
 
-        holder.mView.setOnClickListener((v) -> listener.listItemClicked(v.getContext(), String.valueOf(holder.getItemId())));
+        holder.mView.setOnClickListener((v) -> listener.listItemClicked(v.getContext(), productItem.getId(), productItem.getImageUrl()));
     }
 
     @Override
@@ -66,7 +66,7 @@ public class GroceryItemRecyclerViewAdapter
     }
 
     public interface GroceryItemClickListener {
-        void listItemClicked(Context context, String productId);
+        void listItemClicked(Context context, String id, String productId);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

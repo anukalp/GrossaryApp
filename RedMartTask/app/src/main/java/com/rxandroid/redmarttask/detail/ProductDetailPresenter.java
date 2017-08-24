@@ -113,6 +113,10 @@ public class ProductDetailPresenter implements ProductDetailContract.Presenter {
         String title = product.getName();
         String description = product.getDescription();
 
+        if(!Strings.isNullOrEmpty(productDetail.getImageUrl())){
+            mProductView.setImage(productDetail.getImageUrl());
+        }
+
         if (Strings.isNullOrEmpty(title)) {
             mProductView.hideTitle();
         } else {

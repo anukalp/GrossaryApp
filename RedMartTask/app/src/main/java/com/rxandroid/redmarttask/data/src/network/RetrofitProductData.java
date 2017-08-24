@@ -1,10 +1,13 @@
 package com.rxandroid.redmarttask.data.src.network;
 
 import com.rxandroid.redmarttask.data.ProductDetail;
+import com.rxandroid.redmarttask.data.src.network.pojo.DetailResponse;
 import com.rxandroid.redmarttask.data.src.network.pojo.ListingResponse;
 import com.rxandroid.redmarttask.util.AppConstants;
 
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.Path;
@@ -23,7 +26,7 @@ public interface RetrofitProductData {
      */
     @Headers({AppConstants.API_CONSTANTS.CONTENT_TYPE_APPLICATION_JSON})
     @GET(AppConstants.API_CONSTANTS.REQUEST_PRODUCTS)
-    Observable<ListingResponse> requestProductListObservable(@Query(AppConstants.API_CONSTANTS.PAGE_NO) int pageNo, @Query(AppConstants.API_CONSTANTS.PAGE_SIZE) int pageSize);
+    Single<ListingResponse> requestProductListObservable(@Query(AppConstants.API_CONSTANTS.PAGE_NO) int pageNo, @Query(AppConstants.API_CONSTANTS.PAGE_SIZE) int pageSize);
 
     /**
      * API for product detail
@@ -33,7 +36,7 @@ public interface RetrofitProductData {
      */
     @Headers({AppConstants.API_CONSTANTS.CONTENT_TYPE_APPLICATION_JSON})
     @GET(AppConstants.API_CONSTANTS.REQUEST_PRODUCT)
-    Observable<ProductDetail> requestProductObservable(@Path(value = AppConstants.API_CONSTANTS.PRODUCT_ID) String id);
+    Observable<DetailResponse> requestProductObservable(@Path(value = AppConstants.API_CONSTANTS.PRODUCT_ID) String id);
 
 
 }

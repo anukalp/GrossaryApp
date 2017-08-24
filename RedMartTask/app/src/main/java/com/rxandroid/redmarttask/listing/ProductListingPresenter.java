@@ -113,9 +113,7 @@ public class ProductListingPresenter implements ProductListingContract.Presenter
                         // onNext
                         this::processProducts,
                         // onError
-                        throwable -> mProductView.showLoadingProductsError(),
-                        // onCompleted
-                        () -> mProductView.setLoadingIndicator(false));
+                        throwable -> mProductView.showLoadingProductsError());
         mSubscriptions.add(subscription);
     }
 
@@ -125,6 +123,7 @@ public class ProductListingPresenter implements ProductListingContract.Presenter
 
     @Override
     public void loadMore(int pageNo) {
+        mProductRepository.refreshProducts();
         loadProducts(false, false, pageNo);
     }
 }

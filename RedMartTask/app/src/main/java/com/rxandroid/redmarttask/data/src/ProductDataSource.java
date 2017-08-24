@@ -7,6 +7,7 @@ import com.rxandroid.redmarttask.data.ProductDetail;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.Single;
 
 /**
  * Created by anukalp on 22/8/17.
@@ -14,7 +15,7 @@ import io.reactivex.Observable;
 
 public interface ProductDataSource {
 
-    Observable<List<ProductDetail>> getProducts(int startOffSet);
+    Single<List<ProductDetail>> getProducts(int startOffSet);
 
     Observable<ProductDetail> getProduct(@NonNull String productId);
 

@@ -40,6 +40,8 @@ public interface ProductDetailContract {
         void setLoadingIndicator(boolean b);
 
         void showMissingProduct();
+
+        void setImage(String imageUrl);
     }
 
     interface Presenter extends BasePresenter {

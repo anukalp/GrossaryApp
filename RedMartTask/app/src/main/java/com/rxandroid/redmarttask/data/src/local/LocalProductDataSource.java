@@ -27,6 +27,7 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import io.reactivex.functions.Function;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -85,7 +86,7 @@ public class LocalProductDataSource implements ProductDataSource {
 
 
     @Override
-    public Observable<List<ProductDetail>> getProducts(int pageNo) {
+    public Single<List<ProductDetail>> getProducts(int pageNo) {
         int startOffSet = pageNo * AppConstants.MAX_ITEMS_PER_REQUEST;
         String[] projection = {
                 ProductEntry.COLUMN_NAME_ENTRY_ID,
@@ -97,8 +98,9 @@ public class LocalProductDataSource implements ProductDataSource {
                 ProductEntry.COLUMN_NAME_COMPLETED
         };
         String sql = String.format("SELECT %s FROM %s WHERE " + ProductEntry.COLUMN_NAME_ENTRY_ID + " > %s", TextUtils.join(",", projection), ProductEntry.TABLE_NAME, startOffSet);
-        return mDatabaseHelper.createQuery(ProductEntry.TABLE_NAME, sql)
+        Observable<List<ProductDetail>> productDetails = mDatabaseHelper.createQuery(ProductEntry.TABLE_NAME, sql)
                 .mapToList(mProductMapperFunction);
+        return productDetails.flatMap((productDetail) -> Observable.fromIterable(productDetail)).toList();
     }
 
     @Override

@@ -27,6 +27,8 @@ public class ProductsDbHelper extends SQLiteOpenHelper {
                     ProductsPersistenceContract.ProductEntry.COLUMN_NAME_DESCRIPTION + TEXT_TYPE + COMMA_SEP +
                     ProductsPersistenceContract.ProductEntry.COLUMN_NAME_IMAGE + TEXT_TYPE + COMMA_SEP +
                     ProductsPersistenceContract.ProductEntry.COLUMN_NAME_PRICE + TEXT_TYPE + COMMA_SEP +
+                    ProductsPersistenceContract.ProductEntry.COLUMN_NAME_WEIGHT + TEXT_TYPE + COMMA_SEP +
+                    ProductsPersistenceContract.ProductEntry.COLUMN_NAME_ADDED + TEXT_TYPE + COMMA_SEP +
                     ProductsPersistenceContract.ProductEntry.COLUMN_NAME_COMPLETED + BOOLEAN_TYPE +
                     " )";
 
