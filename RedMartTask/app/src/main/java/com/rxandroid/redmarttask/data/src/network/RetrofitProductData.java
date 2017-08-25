@@ -26,7 +26,7 @@ public interface RetrofitProductData {
      */
     @Headers({AppConstants.API_CONSTANTS.CONTENT_TYPE_APPLICATION_JSON})
     @GET(AppConstants.API_CONSTANTS.REQUEST_PRODUCTS)
-    Observable<ListingResponse> requestProductListObservable(@Query(AppConstants.API_CONSTANTS.PAGE_NO) int pageNo, @Query(AppConstants.API_CONSTANTS.PAGE_SIZE) int pageSize);
+    Single<ListingResponse> requestProductListObservable(@Query(AppConstants.API_CONSTANTS.PAGE_NO) int pageNo, @Query(AppConstants.API_CONSTANTS.PAGE_SIZE) int pageSize);
 
     /**
      * API for product detail
@@ -36,7 +36,7 @@ public interface RetrofitProductData {
      */
     @Headers({AppConstants.API_CONSTANTS.CONTENT_TYPE_APPLICATION_JSON})
     @GET(AppConstants.API_CONSTANTS.REQUEST_PRODUCT)
-    Observable<DetailResponse> requestProductObservable(@Path(value = AppConstants.API_CONSTANTS.PRODUCT_ID) String id);
+    Single<DetailResponse> requestProductObservable(@Path(value = AppConstants.API_CONSTANTS.PRODUCT_ID) String id);
 
 
 }

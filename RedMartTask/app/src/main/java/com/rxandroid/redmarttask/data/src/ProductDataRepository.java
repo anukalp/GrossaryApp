@@ -72,7 +72,9 @@ public class ProductDataRepository implements ProductDataSource {
      */
     @Override
     public Observable<List<ProductDetail>> getProducts(int pageNo) {
-        // Respond immediately with cache if available and not dirty
+        return mRemoteDataSource
+                .getProducts(pageNo);
+       /* // Respond immediately with cache if available and not dirty
         if (mCachedTasks != null && !mCacheIsDirty) {
             return Observable.fromIterable(mCachedTasks.values()).toList().toObservable();
         } else if (mCachedTasks == null) {
@@ -89,7 +91,7 @@ public class ProductDataRepository implements ProductDataSource {
             List<ProductDetail> defaultProducts = new ArrayList<>(mCachedTasks.values());
             return Observable.concat(localProducts, remoteProducts)
                     .filter(productDetail -> !productDetail.isEmpty()).first(defaultProducts).toObservable();
-        }
+        }*/
     }
 
     @Override

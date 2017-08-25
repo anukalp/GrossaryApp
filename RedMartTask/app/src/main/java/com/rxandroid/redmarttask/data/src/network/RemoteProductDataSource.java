@@ -65,12 +65,12 @@ public class RemoteProductDataSource implements ProductDataSource {
 
     @Override
     public Observable<List<ProductDetail>> getProducts(int pageNo) {
-        return retrofitProductData.requestProductListObservable(pageNo, AppConstants.MAX_ITEMS_PER_REQUEST).map(mProductsMapperFunction);
+        return retrofitProductData.requestProductListObservable(pageNo, AppConstants.MAX_ITEMS_PER_REQUEST).map(mProductsMapperFunction).toObservable();
     }
 
     @Override
     public Observable<ProductDetail> getProduct(@NonNull String productId) {
-        return retrofitProductData.requestProductObservable(productId).map(mProductMapperFunction);
+        return retrofitProductData.requestProductObservable(productId).map(mProductMapperFunction).toObservable();
     }
 
     @Override
