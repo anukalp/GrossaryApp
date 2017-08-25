@@ -1,9 +1,12 @@
 package com.rxandroid.redmarttask.detail;
 
 import android.app.Activity;
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -41,6 +44,8 @@ public class ProductDetailFragment extends Fragment implements ProductDetailCont
     private Toolbar toolbar;
     private CollapsingToolbarLayout appBarLayout;
     private String imageUrl;
+    private ImageView mImageView;
+    private Context mContext;
 
 
     public static ProductDetailFragment newInstance(String productId, String itemUrl) {
@@ -50,6 +55,12 @@ public class ProductDetailFragment extends Fragment implements ProductDetailCont
         ProductDetailFragment detailFragment = new ProductDetailFragment();
         detailFragment.setArguments(arguments);
         return detailFragment;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mContext = context.getApplicationContext();
     }
 
     @Override
@@ -74,8 +85,6 @@ public class ProductDetailFragment extends Fragment implements ProductDetailCont
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Activity activity = this.getActivity();
-        appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
         productId = getArguments().getString(ProductDetailFragment.ARG_ITEM_ID);
         imageUrl = getArguments().getString(ProductDetailFragment.ARG_ITEM_URL);
     }
@@ -84,6 +93,20 @@ public class ProductDetailFragment extends Fragment implements ProductDetailCont
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.product_detail, container, false);
+        appBarLayout = (CollapsingToolbarLayout) rootView.findViewById(R.id.toolbar_layout);
+        Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.detail_toolbar);
+        if(getActivity() instanceof ProductDetailActivity) {
+            ((ProductDetailActivity) getActivity()).setSupportActionBar(toolbar);
+        }
+        mImageView = (ImageView) rootView.findViewById(R.id.product_img);
+        FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        fab.setOnClickListener((view) ->
+                Snackbar.make(view, "Sorry this is beta version checkout is still under development", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show());
+
+        Glide.with(mContext).load(imageUrl)
+                .centerCrop()
+                .into(mImageView);
         productDescription = (TextView) rootView.findViewById(R.id.product_detail);
         return rootView;
     }
@@ -127,11 +150,9 @@ public class ProductDetailFragment extends Fragment implements ProductDetailCont
     public void setImage(String imgUrl) {
         if(null == imageUrl) {
             imageUrl = imgUrl;
-            Activity activity = this.getActivity();
-            ImageView imageView = (ImageView) activity.findViewById(R.id.product_img);
-            Glide.with(activity.getApplicationContext()).load(imageUrl)
+            Glide.with(mContext).load(imageUrl)
                     .centerCrop()
-                    .into(imageView);
+                    .into(mImageView);
         }
     }
 }

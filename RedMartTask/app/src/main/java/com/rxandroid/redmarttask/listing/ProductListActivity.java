@@ -18,6 +18,8 @@ import com.rxandroid.redmarttask.R;
 import com.rxandroid.redmarttask.data.ProductDetail;
 import com.rxandroid.redmarttask.detail.ProductDetailActivity;
 import com.rxandroid.redmarttask.detail.ProductDetailFragment;
+import com.rxandroid.redmarttask.detail.ProductDetailPresenter;
+import com.rxandroid.redmarttask.util.ActivityUtils;
 import com.rxandroid.redmarttask.util.AppConstants;
 
 import java.util.List;
@@ -41,6 +43,7 @@ public class ProductListActivity extends AppCompatActivity implements GroceryIte
     private ProductListingContract.Presenter mPresenter;
     private InfiniteScrollListener scrollListener;
     private SwipeRefreshLayout refreshLayout;
+    private boolean isSelected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +56,6 @@ public class ProductListActivity extends AppCompatActivity implements GroceryIte
         refreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
 
         mPresenter = new ProductListingPresenter(this);
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener((view) ->
                 Snackbar.make(view, "Filters Support is yet to be implemented", Snackbar.LENGTH_LONG)
@@ -65,7 +67,17 @@ public class ProductListActivity extends AppCompatActivity implements GroceryIte
 
         if (findViewById(R.id.product_detail_container) != null) {
             isMultiPane = true;
+            ProductDetailFragment fragment = initDetailFragment(null, null);
+            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), fragment,R.id.product_detail_container, AppConstants.DETAIL_CONTACTS_TAG);
         }
+    }
+
+    @NonNull
+    private ProductDetailFragment initDetailFragment(String productId, String itemUrl) {
+        ProductDetailFragment fragment = ProductDetailFragment.newInstance(productId, itemUrl);
+        ProductDetailPresenter detailPresenter = new ProductDetailPresenter(productId, fragment);
+        fragment.setPresenter(detailPresenter);
+        return fragment;
     }
 
     @Override
@@ -105,16 +117,19 @@ public class ProductListActivity extends AppCompatActivity implements GroceryIte
     @Override
     public void listItemClicked(Context context, String itemId, String itemUrl) {
         if (isMultiPane) {
-            ProductDetailFragment fragment = ProductDetailFragment.newInstance(itemId, itemUrl);
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.product_detail_container, fragment)
-                    .commit();
+            setMultiPaneDetailFragment(itemId, itemUrl);
         } else {
             Intent intent = new Intent(context, ProductDetailActivity.class);
             intent.putExtra(ProductDetailFragment.ARG_ITEM_ID, itemId);
             intent.putExtra(ProductDetailFragment.ARG_ITEM_URL, itemUrl);
             context.startActivity(intent);
         }
+    }
+
+    private void setMultiPaneDetailFragment(String itemId, String itemUrl) {
+        isSelected = true;
+        ProductDetailFragment fragment = initDetailFragment(itemId, itemUrl);
+        ActivityUtils.replaceFragment(getSupportFragmentManager(), fragment, R.id.product_detail_container, AppConstants.DETAIL_CONTACTS_TAG);
     }
 
     @Override
@@ -129,6 +144,10 @@ public class ProductListActivity extends AppCompatActivity implements GroceryIte
 
     @Override
     public void setProductList(List<ProductDetail> productDetailList) {
+        if (isMultiPane && !isSelected && !productDetailList.isEmpty()) {
+            ProductDetail productDetail = productDetailList.get(0);
+            setMultiPaneDetailFragment(productDetail.getId(), productDetail.getImageUrl());
+        }
         int startCount = groceryItemAdapter.getItemCount();
         groceryItemAdapter.addProducts(productDetailList);
         groceryItemAdapter.notifyItemRangeChanged(startCount, productDetailList.size());

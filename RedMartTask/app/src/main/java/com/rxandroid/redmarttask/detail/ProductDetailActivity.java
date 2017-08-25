@@ -4,16 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v7.widget.Toolbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.ActionBar;
 import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
-import com.rxandroid.redmarttask.listing.ProductListActivity;
 import com.rxandroid.redmarttask.R;
+import com.rxandroid.redmarttask.listing.ProductListActivity;
 import com.rxandroid.redmarttask.util.ActivityUtils;
 import com.rxandroid.redmarttask.util.AppConstants;
 
@@ -25,19 +22,10 @@ import com.rxandroid.redmarttask.util.AppConstants;
  */
 public class ProductDetailActivity extends AppCompatActivity {
 
-    private ProductDetailPresenter mProductDetailPresneter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_detail);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
-        setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener((view) ->
-                Snackbar.make(view, "Sorry this is beta version checkout is still under development", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show());
 
         // Show the Up button in the action bar.
         ActionBar actionBar = getSupportActionBar();
@@ -45,21 +33,15 @@ public class ProductDetailActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        ImageView imageView = (ImageView) findViewById(R.id.product_img);
 
         if (savedInstanceState == null) {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             String productId = getIntent().getStringExtra(ProductDetailFragment.ARG_ITEM_ID);
             String itemUrl = getIntent().getStringExtra(ProductDetailFragment.ARG_ITEM_URL);
-            Glide.with(getApplicationContext()).load(itemUrl)
-                    .centerCrop()
-                    .into(imageView);
-
             ProductDetailFragment detailFragment = ProductDetailFragment.newInstance(productId, itemUrl);
+            detailFragment.setPresenter(new ProductDetailPresenter(productId, detailFragment));
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), detailFragment, R.id.product_detail_container, AppConstants.DETAIL_CONTACTS_TAG);
-
-            mProductDetailPresneter = new ProductDetailPresenter(productId, detailFragment);
         }
     }
 

@@ -43,6 +43,15 @@ public class ActivityUtils {
         transaction.commit();
     }
 
+    public static void replaceFragment(@NonNull FragmentManager fragmentManager,
+                                                 @NonNull Fragment fragment, int frameId, String tagName) {
+        checkNotNull(fragmentManager);
+        checkNotNull(fragment);
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(frameId, fragment, tagName);
+        transaction.commit();
+    }
+
     public static void replaceFragmentToActivity(@NonNull FragmentManager fragmentManager,
                                                  @NonNull Fragment fragment, int frameId, String tagName) {
         checkNotNull(fragmentManager);

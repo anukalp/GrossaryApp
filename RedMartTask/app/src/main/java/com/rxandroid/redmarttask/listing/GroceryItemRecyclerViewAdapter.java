@@ -38,6 +38,10 @@ public class GroceryItemRecyclerViewAdapter
         this.mProducts.addAll(products);
     }
 
+    public List<ProductDetail> getProducts() {
+        return mProducts;
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
