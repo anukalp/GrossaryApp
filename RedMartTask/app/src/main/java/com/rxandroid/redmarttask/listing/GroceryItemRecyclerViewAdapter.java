@@ -50,8 +50,13 @@ public class GroceryItemRecyclerViewAdapter
         ProductDetail productItem = mProducts.get(position);
         holder.mIdView.setText(productItem.getTitleForList());
         holder.mWeight.setText(productItem.getmWeight());
-        holder.priceView.setText(ActivityUtils.roundOffDouble(productItem.getPrice().getPromoPrice()));
-        holder.discountTextView.setText(ActivityUtils.roundOffDouble(productItem.getPrice().getPrice()));
+        if(productItem.getPrice().getPromoPrice() == 0) {
+            holder.priceView.setText(ActivityUtils.roundOffDouble(productItem.getPrice().getPrice()));
+            holder.discountTextView.setVisibility(View.GONE);
+        } else {
+            holder.priceView.setText(ActivityUtils.roundOffDouble(productItem.getPrice().getPromoPrice()));
+            holder.discountTextView.setText(ActivityUtils.roundOffDouble(productItem.getPrice().getPrice()));
+        }
 
         Glide.with(holder.mView.getContext()).load(productItem.getImageUrl())
                 .centerCrop()

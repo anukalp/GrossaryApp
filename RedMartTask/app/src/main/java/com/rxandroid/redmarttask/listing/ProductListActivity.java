@@ -78,6 +78,7 @@ public class ProductListActivity extends AppCompatActivity implements GroceryIte
     protected void onPause() {
         super.onPause();
         mPresenter.unSubscribe();
+        refreshLayout.setRefreshing(false);
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {

@@ -87,7 +87,7 @@ public class ProductListingPresenter implements ProductListingContract.Presenter
 
     public void loadProducts(boolean forceUpdate) {
         // Simplification for sample: a network reload will be forced on first load.
-        loadProducts(forceUpdate || mFirstLoad, true, 0);
+        loadProducts(forceUpdate || mFirstLoad, false, 0);
         mFirstLoad = false;
     }
 
