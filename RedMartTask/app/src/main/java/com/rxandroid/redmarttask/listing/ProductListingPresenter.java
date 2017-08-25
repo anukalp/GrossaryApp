@@ -119,11 +119,12 @@ public class ProductListingPresenter implements ProductListingContract.Presenter
 
     private void processProducts(List<ProductDetail> productDetailList) {
         mProductView.setProductList(productDetailList);
+        mProductView.setLoadingIndicator(false);
     }
 
     @Override
     public void loadMore(int pageNo) {
         mProductRepository.refreshProducts();
-        loadProducts(false, false, pageNo);
+        loadProducts(false, true, pageNo);
     }
 }

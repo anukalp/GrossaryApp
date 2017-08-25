@@ -17,6 +17,11 @@
     
     -->
 
+    <com.rxandroid.redmarttask.listing.MyCustomRefreshLayout
+        android:id="@+id/swiperefresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
     <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/product_list"
@@ -28,6 +33,8 @@
         app:layoutManager="LinearLayoutManager"
         tools:context="com.rxandroid.redmarttask.listing.ProductListActivity"
         tools:listitem="@layout/product_list_content" />
+
+    </com.rxandroid.redmarttask.listing.MyCustomRefreshLayout>
 
     <FrameLayout
         android:id="@+id/product_detail_container"

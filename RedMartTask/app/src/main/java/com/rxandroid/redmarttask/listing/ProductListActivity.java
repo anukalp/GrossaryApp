@@ -3,13 +3,16 @@ package com.rxandroid.redmarttask.listing;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 
 import com.rxandroid.redmarttask.R;
 import com.rxandroid.redmarttask.data.ProductDetail;
@@ -37,6 +40,7 @@ public class ProductListActivity extends AppCompatActivity implements GroceryIte
     private GroceryItemRecyclerViewAdapter groceryItemAdapter;
     private ProductListingContract.Presenter mPresenter;
     private InfiniteScrollListener scrollListener;
+    private SwipeRefreshLayout refreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +50,7 @@ public class ProductListActivity extends AppCompatActivity implements GroceryIte
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
+        refreshLayout = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
 
         mPresenter = new ProductListingPresenter(this);
 
@@ -118,7 +123,7 @@ public class ProductListActivity extends AppCompatActivity implements GroceryIte
 
     @Override
     public void setLoadingIndicator(boolean showLoader) {
-
+        new Handler().postDelayed(() -> refreshLayout.setRefreshing(showLoader), showLoader ? 0 : 300);
     }
 
     @Override
