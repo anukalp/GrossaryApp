@@ -3,7 +3,6 @@ package com.rxandroid.redmarttask.data.src.local;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
@@ -11,13 +10,14 @@ import com.google.gson.Gson;
 import com.rxandroid.redmarttask.application.RedMartApplication;
 import com.rxandroid.redmarttask.data.ProductDetail;
 import com.rxandroid.redmarttask.data.src.ProductDataSource;
+import com.rxandroid.redmarttask.data.src.local.database.ProductsDbHelper;
 import com.rxandroid.redmarttask.data.src.local.database.ProductsPersistenceContract.ProductEntry;
 import com.rxandroid.redmarttask.data.src.network.pojo.Pricing;
 import com.rxandroid.redmarttask.util.AppConstants;
 import com.rxandroid.redmarttask.util.schedulers.BaseSchedulerProvider;
 import com.squareup.sqlbrite2.BriteDatabase;
+import com.squareup.sqlbrite2.QueryObservable;
 import com.squareup.sqlbrite2.SqlBrite;
-import com.rxandroid.redmarttask.data.src.local.database.ProductsDbHelper;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -28,6 +28,7 @@ import javax.inject.Singleton;
 
 import io.reactivex.Observable;
 import io.reactivex.Single;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -86,7 +87,7 @@ public class LocalProductDataSource implements ProductDataSource {
 
 
     @Override
-    public Single<List<ProductDetail>> getProducts(int pageNo) {
+    public Observable<List<ProductDetail>> getProducts(int pageNo) {
         int startOffSet = pageNo * AppConstants.MAX_ITEMS_PER_REQUEST;
         String[] projection = {
                 ProductEntry.COLUMN_NAME_ENTRY_ID,
@@ -100,11 +101,11 @@ public class LocalProductDataSource implements ProductDataSource {
         String sql = String.format("SELECT %s FROM %s WHERE " + ProductEntry.COLUMN_NAME_ENTRY_ID + " > %s", TextUtils.join(",", projection), ProductEntry.TABLE_NAME, startOffSet);
         Observable<List<ProductDetail>> productDetails = mDatabaseHelper.createQuery(ProductEntry.TABLE_NAME, sql)
                 .mapToList(mProductMapperFunction);
-        return productDetails.flatMap((productDetail) -> Observable.fromIterable(productDetail)).toList();
+        return productDetails;
     }
 
     @Override
-    public Observable<ProductDetail> getProduct(@NonNull String taskId) {
+    public Observable<ProductDetail> getProduct(@NonNull String productId) {
         String[] projection = {
                 ProductEntry.COLUMN_NAME_ENTRY_ID,
                 ProductEntry.COLUMN_NAME_TITLE,
@@ -116,7 +117,7 @@ public class LocalProductDataSource implements ProductDataSource {
         };
         String sql = String.format("SELECT %s FROM %s WHERE %s LIKE ?",
                 TextUtils.join(",", projection), ProductEntry.TABLE_NAME, ProductEntry.COLUMN_NAME_ENTRY_ID);
-        return mDatabaseHelper.createQuery(ProductEntry.TABLE_NAME, sql, taskId)
+        return mDatabaseHelper.createQuery(ProductEntry.TABLE_NAME, sql, productId)
                 .mapToOneOrDefault(mProductMapperFunction, null);
     }
 
@@ -136,9 +137,8 @@ public class LocalProductDataSource implements ProductDataSource {
         int startValue = 0;
         //Bulk Insert 20 as per pagination api
         while (startValue < partitions.size()) {
-            SQLiteDatabase sqlDB = mDatabaseHelper.getWritableDatabase();
             List<ProductDetail> detailList = partitions.get(startValue++);
-            sqlDB.beginTransaction();
+            BriteDatabase.Transaction transaction = mDatabaseHelper.newTransaction();
             try {
                 for (ProductDetail productDetail : detailList) {
                     ContentValues values = new ContentValues();
@@ -150,11 +150,11 @@ public class LocalProductDataSource implements ProductDataSource {
                     values.put(ProductEntry.COLUMN_NAME_IMAGE, productDetail.getImageUrl());
                     values.put(ProductEntry.COLUMN_NAME_ADDED, productDetail.getAdded());
                     values.put(ProductEntry.COLUMN_NAME_WEIGHT, productDetail.getmWeight());
-                    mDatabaseHelper.insert(ProductEntry.TABLE_NAME, values, SQLiteDatabase.CONFLICT_REPLACE);
+                    mDatabaseHelper.insert(ProductEntry.TABLE_NAME, values);
                 }
-                sqlDB.setTransactionSuccessful();
+                transaction.markSuccessful();
             } finally {
-                sqlDB.endTransaction();
+                transaction.end();
             }
         }
 

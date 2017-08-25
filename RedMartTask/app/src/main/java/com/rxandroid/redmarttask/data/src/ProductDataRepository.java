@@ -7,6 +7,7 @@ import com.rxandroid.redmarttask.data.ProductDetail;
 import com.rxandroid.redmarttask.data.src.local.LocalProductDataSource;
 import com.rxandroid.redmarttask.data.src.network.RemoteProductDataSource;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,21 +47,21 @@ public class ProductDataRepository implements ProductDataSource {
     }
 
 
-    private Single<List<ProductDetail>> getAndCacheLocalProducts(int pageNo) {
+    private Observable<List<ProductDetail>> getAndCacheLocalProducts(int pageNo) {
         return mLocalDataSource.getProducts(pageNo)
                 .flatMap(productDetails -> Observable.fromIterable(productDetails).doOnNext(productDetail -> {
                     mCachedTasks.put(productDetail.getId(), productDetail);
-                }).toList());
+                }).toList().toObservable());
     }
 
-    private Single<List<ProductDetail>> getAndSaveRemoteProducts(int pageNo) {
+    private Observable<List<ProductDetail>> getAndSaveRemoteProducts(int pageNo) {
         return mRemoteDataSource
                 .getProducts(pageNo)
                 .flatMap(productDetails -> {
                     mLocalDataSource.saveProducts(productDetails);
                     return Observable.fromIterable(productDetails).doOnNext(productDetail -> {
                         mCachedTasks.put(productDetail.getId(), productDetail);
-                    }).toList();
+                    }).toList().toObservable();
                 })
                 .doOnDispose(() -> mCacheIsDirty = false);
     }
@@ -70,24 +71,24 @@ public class ProductDataRepository implements ProductDataSource {
      * available first.
      */
     @Override
-    public Single<List<ProductDetail>> getProducts(int pageNo) {
+    public Observable<List<ProductDetail>> getProducts(int pageNo) {
         // Respond immediately with cache if available and not dirty
         if (mCachedTasks != null && !mCacheIsDirty) {
-            return Observable.fromIterable(mCachedTasks.values()).toList();
+            return Observable.fromIterable(mCachedTasks.values()).toList().toObservable();
         } else if (mCachedTasks == null) {
             mCachedTasks = new LinkedHashMap<>();
         }
         mCachedTasks.clear();
 
-        Single<List<ProductDetail>> remoteProducts = getAndSaveRemoteProducts(pageNo);
-
+        Observable<List<ProductDetail>> remoteProducts = getAndSaveRemoteProducts(pageNo);
         if (mCacheIsDirty) {
             return remoteProducts;
         } else {
             // Query the local storage if available. If not, query the network.
-            Single<List<ProductDetail>> localProducts = getAndCacheLocalProducts(pageNo);
-            return Single.concat(localProducts, remoteProducts)
-                    .filter(tasks -> !tasks.isEmpty()).first((List<ProductDetail>) mCachedTasks.values());
+            Observable<List<ProductDetail>> localProducts = getAndCacheLocalProducts(pageNo);
+            List<ProductDetail> defaultProducts = new ArrayList<>(mCachedTasks.values());
+            return Observable.concat(localProducts, remoteProducts)
+                    .filter(productDetail -> !productDetail.isEmpty()).first(defaultProducts).toObservable();
         }
     }
 

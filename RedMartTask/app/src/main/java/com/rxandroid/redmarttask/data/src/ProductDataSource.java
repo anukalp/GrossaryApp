@@ -8,6 +8,7 @@ import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.Single;
+import io.reactivex.disposables.Disposable;
 
 /**
  * Created by anukalp on 22/8/17.
@@ -15,7 +16,7 @@ import io.reactivex.Single;
 
 public interface ProductDataSource {
 
-    Single<List<ProductDetail>> getProducts(int startOffSet);
+    Observable<List<ProductDetail>> getProducts(int startOffSet);
 
     Observable<ProductDetail> getProduct(@NonNull String productId);
 

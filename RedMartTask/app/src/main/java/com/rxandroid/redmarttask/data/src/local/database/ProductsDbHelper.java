@@ -21,7 +21,7 @@ public class ProductsDbHelper extends SQLiteOpenHelper {
 
     private static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE " + ProductsPersistenceContract.ProductEntry.TABLE_NAME + " (" +
-                    ProductsPersistenceContract.ProductEntry._ID + TEXT_TYPE + " PRIMARY KEY," +
+                    ProductsPersistenceContract.ProductEntry._ID + BOOLEAN_TYPE + "AUTO_INCREMENT PRIMARY KEY," +
                     ProductsPersistenceContract.ProductEntry.COLUMN_NAME_ENTRY_ID + TEXT_TYPE + COMMA_SEP +
                     ProductsPersistenceContract.ProductEntry.COLUMN_NAME_TITLE + TEXT_TYPE + COMMA_SEP +
                     ProductsPersistenceContract.ProductEntry.COLUMN_NAME_DESCRIPTION + TEXT_TYPE + COMMA_SEP +
